@@ -1,26 +1,68 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <div class="long-title">
+      <h3>Tasks for Employees (USA Office)</h3>
+    </div>
+    <DxScheduler
+      :data-source="dataSource"
+      :current-date="currentDate"
+      :views="views"
+      :height="500"
+      :editing="false"
+      :show-all-day-panel="false"
+      :start-day-hour="7"
+      start-date-expr="start.dateTime"
+      end-date-expr="end.dateTime"
+      text-expr="summary"
+      time-zone="America/Los_Angeles"
+      current-view="workWeek"
+    />
+  </div>
 </template>
-
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import 'whatwg-fetch';
+import DxScheduler from 'devextreme-vue/scheduler';
+import CustomStore from 'devextreme/data/custom_store';
 
 export default {
-  name: 'App',
   components: {
-    HelloWorld
-  }
-}
-</script>
+    DxScheduler,
+  },
+  data() {
+    return {
+      views: ['day', 'workWeek', 'month'],
+      currentDate: new Date(2022, 2, 6),
+      dataSource: new CustomStore({
+        load: (options) => this.getData(options, { showDeleted: false }),
+      }),
+    };
+  },
+  methods: {
+    getData(_, requestOptions) {
+      const PUBLIC_KEY = 'AIzaSyAiVM8SUdzANblCt9J8WQex43ot70kUnvg';
+      const CALENDAR_ID = 'avazbek.dev@gmail.com';
+      const dataUrl = ['https://www.googleapis.com/calendar/v3/calendars/',
+        CALENDAR_ID, '/events?key=', PUBLIC_KEY].join('');
 
+      return fetch(dataUrl, requestOptions).then(
+        (response) => response.json(),
+      ).then((data) => data.items);
+    },
+  },
+};
+</script>
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+.long-title h3 {
+  font-family:
+    'Segoe UI Light',
+    'Helvetica Neue Light',
+    'Segoe UI',
+    'Helvetica Neue',
+    'Trebuchet MS',
+    Verdana;
+  font-weight: 200;
+  font-size: 28px;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  margin-bottom: 20px;
 }
 </style>
