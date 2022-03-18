@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="long-title">
-      <h3>Tasks for Employees (USA Office)</h3>
+      <h3>G-C</h3>
     </div>
     <DxScheduler
       :data-source="dataSource"
@@ -21,8 +21,8 @@
 </template>
 <script>
 import 'whatwg-fetch';
-import DxScheduler from 'devextreme-vue/scheduler';
 import CustomStore from 'devextreme/data/custom_store';
+import {DxScheduler} from "@/components/scheduler";
 
 export default {
   components: {
@@ -31,7 +31,7 @@ export default {
   data() {
     return {
       views: ['day', 'workWeek', 'month'],
-      currentDate: new Date(2022, 2, 6),
+      currentDate: new Date(2022, 2, 22),
       dataSource: new CustomStore({
         load: (options) => this.getData(options, { showDeleted: false }),
       }),
